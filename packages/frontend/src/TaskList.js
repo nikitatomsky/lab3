@@ -6,7 +6,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import EventIcon from '@mui/icons-material/Event';
 
-function TaskList({ onEdit }) {
+function TaskList({ onEdit, onUpdatePriority }) {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -127,7 +127,7 @@ function TaskList({ onEdit }) {
           <ListItem 
             key={task.id} 
             sx={{ 
-              pr: 18,
+              pr: 28,
               py: 1,
               mb: 1,
               borderRadius: 2,
@@ -203,19 +203,29 @@ function TaskList({ onEdit }) {
                 gap: 1
               }}
             >
-              {task.priority && (
-                <Chip
-                  label={task.priority}
-                  size="small"
+              {['P1', 'P2', 'P3'].map(p => (
+                <Box
+                  key={p}
+                  component="button"
+                  onClick={() => onUpdatePriority && onUpdatePriority(task, p)}
+                  className={`priority-btn ${task.priority === p ? 'selected' : 'unselected'}`}
                   sx={{
-                    height: 20,
-                    fontSize: '0.7rem',
+                    cursor: 'pointer',
+                    border: 'none',
+                    borderRadius: '4px',
+                    px: 0.75,
+                    py: 0.25,
+                    fontSize: '0.65rem',
                     fontWeight: 700,
-                    background: task.priority === 'P1' ? '#f44336' : task.priority === 'P2' ? '#ff9800' : '#9e9e9e',
                     color: 'white',
+                    background: task.priority === p ? '#07F2E6' : '#7A7A7A',
+                    transition: 'background 0.15s',
+                    '&:hover': { opacity: 0.85 },
                   }}
-                />
-              )}
+                >
+                  {p}
+                </Box>
+              ))}
               {task.due_date && (
                 <Chip
                   icon={<EventIcon sx={{ fontSize: 14 }} />}
